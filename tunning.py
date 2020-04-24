@@ -1,13 +1,18 @@
 import itertools
 import os
 import tensorflow as tf
-from helpers import chunkIt, save_to_csv
+from neuralheuristicsforsat.helpers import chunkIt, save_to_csv
 import time
 from hyperopt import fmin, Trials, rand, tpe, STATUS_OK
 
 from timeit import default_timer as timer
 import numpy as np
+from SIMCIM import SIMCim
 
+global ITERATION
+
+
+ITERATION = 0
 
 def objective(params):
     # Keep track of evals
@@ -32,16 +37,14 @@ def objective(params):
 
 
 def predict(params):
-    complexity = 300
-    tfrecord_location = '/content/neuralheuristicsforsat/sr_{0}'.format(complexity)
-    name = "train_21021_sr_{0}.tfrecord".format(complexity)
+    n = params['complexity'] #no. of variables
+    tfrecord_location = 'sr_{0}'.format(n)
+    name = "train_{1}_sr_{0}.tfrecord".format(n, params['seed'])
     filename = os.path.join(tfrecord_location, name)
 
     record_iterator = tf.python_io.tf_record_iterator(path=filename)
     preds = []
-    # targes = []
-    batch_size = 300
-    n = 300
+    batch_size = params['observations']
 
     train_set = {'cnf': list(), 'sat': list()}
     sim_results = list()
@@ -70,19 +73,3 @@ def predict(params):
         sim_results.append(sim_result)
 
     return (sim_results, train_set)
-
-
-
-tpe_trials = Trials()
-rand_trials = Trials()
-
-global  ITERATION
-
-ITERATION = 0
-
-# Create the algorithms
-tpe_algo = tpe.suggest
-rand_algo = rand.suggest
-
-rand_best = fmin(fn=objective, space=space, algo=rand_algo, trials=rand_trials,
-                 max_evals=2000)
