@@ -57,6 +57,7 @@ def ampl_inc(J, b, c, zeta, p, sigma, attempt_num, dt):
 
 
 def init_ampl(dim, attempt_num):
+    
     return torch.randn((dim, attempt_num), dtype=torch.float32)
 
 
@@ -68,6 +69,8 @@ def energy_calculation(J, b, step1, dt, sigma, alpha, zeta, offset, dim, attempt
     E. S. Tiunov et al. Annealing by simulating the coherent Ising machine (2019).
     Here is used linear pump function.
     """
+    N = int(N)
+    attempt_num = int(attempt_num)
     c_current = init_ampl(dim, attempt_num).to(device) 
     dc_momentum = torch.zeros((dim, attempt_num),dtype=torch.float32,device=device)
     init_lambda = np.array([offset + step1*i/float(N) for i in range(N)])
