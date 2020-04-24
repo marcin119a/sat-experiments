@@ -1,0 +1,3 @@
+torch
+tqdm
+git+https://github.com/satproject/neuralheuristicsforsat

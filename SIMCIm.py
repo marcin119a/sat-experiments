@@ -16,6 +16,7 @@ def data_to_matrix(m, n, data):
         matrix[j][abs(var2)-1] = var2//abs(var2)
     return matrix
 
+
 def ising_params(m, n, matrix):
     
     """ Encoding SAT matrix to Ising 2-body Hamiltonian folowing 
@@ -54,6 +55,7 @@ def ampl_inc(J, b, c, zeta, p, sigma, attempt_num, dt):
     return (p*c + zeta*(2*torch.mm(J, c) + b))*dt +\
                      (sigma*torch.zeros((c.size(0), attempt_num), dtype=torch.float32, device=device))*dt
 
+
 def init_ampl(dim, attempt_num):
     return torch.randn((dim, attempt_num), dtype=torch.float32)
 
@@ -70,42 +72,33 @@ def energy_calculation(J, b, step1, dt, sigma, alpha, zeta, offset, dim, attempt
     dc_momentum = torch.zeros((dim, attempt_num),dtype=torch.float32,device=device)
     init_lambda = np.array([offset + step1*i/float(N) for i in range(N)])
     
-    for i in range(1,N):
+    for i in range(1, N):
         dc = ampl_inc(J, b, c_current, zeta, init_lambda[i], sigma, attempt_num, dt)
         dc_momentum = alpha*dc_momentum + (1-alpha)*dc
-        dc_momentum/=(1.-alpha**i)
+        dc_momentum /= (1.-alpha**i)
         c1 = c_current + dc_momentum
         th_test = (torch.abs(c1)<c_th).type(torch.float32)
         c_current = c_current + th_test*dc_momentum
         spins_current = torch.sign(c_current)
         
-    return (torch.einsum('ij,ik,jk->k',(J,spins_current,spins_current)) +
-            torch.einsum('ij,ik->k',(b,spins_current)))*0.25 - 0.25*m
+    return (torch.einsum('ij,ik,jk->k', (J, spins_current, spins_current)) +
+            torch.einsum('ij,ik->k', (b, spins_current)))*0.25 - 0.25*m
 # initial params + hyperparameters
 
 
-def predict(params, input_sat):
-  #n = 50 # number of variables in 2-SAT formula
+def SIMCim(params, n, m, input_2cnf):
+    c_th = 1.
 
-  # SimCIM hyperparameters
-  c_th = 1. 
-  iter_N = 400
-  zeta = 1.
-  attempt_num = 1000
-  dt = 0.3
-  sigma = 0.2
-  alpha = 0.9 
+    matrix = data_to_matrix(m, n, input_2cnf)
+    J, h = ising_params(m, n, matrix)
+    lambda_max = abs(np.max(np.linalg.eigvals(-J)))
+    J = torch.tensor(-J, dtype=torch.float32, device=device)
+    b = torch.tensor(-h, dtype=torch.float32, device=device).unsqueeze(1)
+    value = torch.max(
+        energy_calculation(J, b, lambda_max, params['dt'], params['sigma'], params['alpha'], params['zeta'],
+                           -lambda_max, J.size(0), params['attempt_num'], params['N'], c_th, m))
+    satis_simcim = int(value.cpu().numpy() == 0)  # checking satisfactory
 
-  m = params['m']
-  n = params['n']
-  
-  matrix = data_to_matrix(m, n, input_sat)
-  J, h = ising_params(m, n, matrix)
-  lambda_max = abs(np.max(np.linalg.eigvals(-J)))
-  J = torch.tensor(-J, dtype=torch.float32, device=device)
-  b = torch.tensor(-h, dtype=torch.float32, device=device).unsqueeze(1)
-  value = torch.max(energy_calculation(J, b, lambda_max, dt, sigma, alpha, zeta, 
-                            -lambda_max, J.size(0), attempt_num, iter_N, c_th, m))
-  satis_simcim = int(value.cpu().numpy()==0) # checking satisfactory
-  
-  return satis_simcim
+    return satis_simcim
+
+
