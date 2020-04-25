@@ -31,7 +31,10 @@ def objective(params):
     run_time = timer() - start
 
     # todo implemented seed
-    loss = np.square(np.subtract(train_set['sat'], y_pred)).mean()
+    if params['loss'] == "mean_squared_error":
+      loss = np.square(np.subtract(train_set['sat'], y_pred)).mean()
+    else:
+      loss = mean_absolute_error(train_set['sat'], y_pred)
 
     save_to_csv('gbm_trials_', [[loss, params, ITERATION, run_time]], n)
 
