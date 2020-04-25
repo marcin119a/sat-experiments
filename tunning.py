@@ -2,6 +2,9 @@ import itertools
 import os
 import tensorflow as tf
 from neuralheuristicsforsat.helpers import chunkIt, save_to_csv
+
+from sklearn.metrics import mean_absolute_error, mean_squared_error
+
 import time
 from hyperopt import fmin, Trials, rand, tpe, STATUS_OK
 
