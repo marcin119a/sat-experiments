@@ -1,3 +1,7 @@
+import os
+import tensorflow as tf
+import itertools
+from neuralheuristicsforsat.helpers import chunkIt, save_to_csv
 
 def predict(params):
     complexity = 300
