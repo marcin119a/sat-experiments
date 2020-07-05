@@ -100,7 +100,7 @@ def SIMCim(params, n, m, input_2cnf):
     value = torch.max(
         energy_calculation(J, b, lambda_max, params['dt'], params['sigma'], params['alpha'], params['zeta'],
                            -lambda_max, J.size(0), params['attempt_num'], params['N'], c_th, m))
-    satis_simcim = int(value.cpu().numpy() == 0)  # checking satisfactory
+    satis_simcim = int(value.cpu().numpy())  # checking satisfactory
 
     return satis_simcim
 
