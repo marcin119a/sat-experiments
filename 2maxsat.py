@@ -22,7 +22,7 @@ def brute_force_2_max_sat(cnf):
  
     return cnf_max, m
     
-  def transform(lista):
+def transform(lista):
   result = []
   for cnf in lista:
     conj = set()
