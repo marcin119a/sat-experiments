@@ -18,7 +18,7 @@ def brute_force_2_max_sat(cnf):
           m = check_cnf.count(True)
           cnf_max = check_cnf
         if all(check_cnf):
-            return True, a
+            return True, len(cnf)
  
     return cnf_max, m
     
