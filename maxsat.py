@@ -32,3 +32,12 @@ def transform(lista):
       conj.add((str(index).rjust(10, '0'), neg ))
     result.append(conj)
   return result
+
+def dump(input_list, m, n):
+  f = open("a{0}.txt".format(m),"a+")    
+  f.write("p cnf %d %d\n" % (len(input_list), n))
+  for x in input_list:
+    a = x[0]
+    b = x[1]
+    f.write("%d %d %d\n" % (a, b, 0))
+  f.close()
