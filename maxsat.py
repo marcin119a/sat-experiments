@@ -41,3 +41,12 @@ def dump(input_list, m, n):
     b = x[1]
     f.write("%d %d %d\n" % (a, b, 0))
   f.close()
+
+def function_from_akmaxsat(out):
+  conj = set()
+  for x in out:
+      conj.add((
+        str(abs(x)).rjust(10, '0'),
+        bool(x > 0),
+      ))
+  return conj
