@@ -118,7 +118,7 @@ run akmaxsat binary algorithm
 ASSIGMENT = 8
 def akmaxsat_run(file, input):
   import subprocess
-  output = str(subprocess.check_output([file, input)).split("\\n")
+  output = str(subprocess.check_output([file, input])).split("\\n")
   vart_max = function_from_akmaxsat(output[ASSIGMENT].replace("v ", ""))
 
   return vart_max
