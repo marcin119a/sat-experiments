@@ -115,6 +115,7 @@ run akmaxsat binary algorithm
     input: string
         path to file-formated cnf
 """
+ASSIGMENT = 8
 def akmaxsat_run(file, input)
   import subprocess
   output = str(subprocess.check_output([file, input)).split("\\n")
