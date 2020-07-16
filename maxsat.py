@@ -55,11 +55,13 @@ p cnf 4 20
         number of clauses
      n: int
         number of variables
+     name: string
+        name for file
 """
 
-def dump(input_list, m, n):
-  f = open("a{0}.txt".format(m),"a+")    
-  f.write("p cnf %d %d\n" % (len(input_list), n))
+def dump(input_list, n, m, name):
+  f = open("{0}.txt".format(name),"a+")    
+  f.write("p cnf %d %d\n" % (2*n, m))
   for x in input_list:
     a = x[0]
     b = x[1]
