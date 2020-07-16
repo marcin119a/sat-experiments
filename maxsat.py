@@ -38,6 +38,7 @@ def transform(lista):
     result.append(conj)
   return result
 
+
 """
 dump into akmaxsat format
 Example:
@@ -47,6 +48,7 @@ p cnf 4 20
 -19 -1 0
 1 -1 0
 """
+
 def dump(input_list, m, n):
   f = open("a{0}.txt".format(m),"a+")    
   f.write("p cnf %d %d\n" % (len(input_list), n))
@@ -56,16 +58,16 @@ def dump(input_list, m, n):
     f.write("%d %d %d\n" % (a, b, 0))
   f.close()
 
-"""
-From out of akmaxsat format like: 
-14 -4 -20
-into 
-{('0000000014', True), ('0000000004', False), ('0000000020', False)}
 
 """
-def function_from_akmaxsat(out_string):
-  out_sting = out_sting.split(" ")
-  out = [int(x) for x in a]
+From out of akmaxsat format like: 
+"14 -4 -20"
+into 
+{('0000000014', True), ('0000000004', False), ('0000000020', False)}
+"""
+
+def function_from_akmaxsat(assigment):
+  out = [int(x) for x in assigment.split(" ")]
   conj = set()
   for x in out:
       conj.add((
