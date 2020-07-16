@@ -75,3 +75,16 @@ def function_from_akmaxsat(assigment):
         bool(x > 0),
       ))
   return conj
+"""
+    from input of akmaxsat to list. 
+"""
+def akmaxsat_format_to_list(file):
+  literals = set()
+  f = open(file, "r")
+  cnf_str = f.read().split("\n")
+  m = int(cnf_str[0].split(" ")[2])
+  n = int(cnf_str[0].split(" ")[3])
+  cnf_str = cnf_str[1:m+1]
+  input = [[int(x.split(" ")[0]), int(x.split(" ")[1])] for x in cnf_str]
+
+  return m,n,input
