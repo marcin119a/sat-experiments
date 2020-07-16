@@ -47,6 +47,14 @@ p cnf 4 20
 -17 6 0
 -19 -1 0
 1 -1 0
+    Parameters
+    ----------
+    input_list : list of 2D lists
+        example: [[0,1], [1,0]]
+     m: int
+        number of clauses
+     n: int
+        number of variables
 """
 
 def dump(input_list, m, n):
@@ -64,6 +72,10 @@ From out of akmaxsat format like:
 "14 -4 -20"
 into 
 {('0000000014', True), ('0000000004', False), ('0000000020', False)}
+    Parameters
+    ----------
+    assigment : string 
+        assigment returned by akmaxsat
 """
 
 def function_from_akmaxsat(assigment):
@@ -77,8 +89,13 @@ def function_from_akmaxsat(assigment):
   return conj
 """
     from input of akmaxsat to list. 
+    Parameters
+    ----------
+    file: string
+        path to file-formated cnf
 """
 def akmaxsat_format_to_list(file):
+  
   literals = set()
   f = open(file, "r")
   cnf_str = f.read().split("\n")
@@ -88,3 +105,21 @@ def akmaxsat_format_to_list(file):
   input = [[int(x.split(" ")[0]), int(x.split(" ")[1])] for x in cnf_str]
 
   return m,n,input
+
+"""
+run akmaxsat binary algorithm
+    Parameters
+    ----------
+    file : string
+        src binary file
+    input: string
+        path to file-formated cnf
+"""
+def akmaxsat_run(file, input)
+  import subprocess
+  output = str(subprocess.check_output([file, input)).split("\\n")
+  vart_max = function_from_akmaxsat(output[ASSIGMENT].replace("v ", ""))
+
+  return vart_max
+
+
