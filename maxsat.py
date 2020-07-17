@@ -60,8 +60,8 @@ p cnf 4 20
 """
 
 def dump(input_list, n, m, name):
-  f = open("{0}.txt".format(name),"a+")    
-  f.write("p cnf %d %d" % (2*n, m))
+  f = open("out/{0}.txt".format(name),"a+")    
+  f.write("p cnf %d %d" % (n, m))
   for x in input_list:
     a = x[0]
     b = x[1]
