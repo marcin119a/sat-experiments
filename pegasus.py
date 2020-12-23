@@ -7,19 +7,12 @@ def pegasus_phase_draw(energies_file, test_set_file, n):
         energies = eval(intput.read())
 
 
-    with open(test_file,'r') as inf:
+    with open(test_set_file, "r") as inf:
         dict_from_file = eval(inf.read())
 
 
-    assert (len(dict_from_file['cnf']) != len(dict_from_file['sat']))
-    assert (len(energies)) != len(dict_from_file['cnf'])
-
-    i = 0
-    j = 0
     for energy, cnf , sat in zip(energies, dict_from_file['cnf'], dict_from_file['sat']):
         m = len(cnf)
-        if int(m + energy) == 0 and sat == 1:
-            i += 1
     
         if m + energy == 0:
             en = 1 
@@ -28,15 +21,13 @@ def pegasus_phase_draw(energies_file, test_set_file, n):
 
         save_to_csv('max_sat_', [[m, m / n, en , sat]], n)
 
-    print(i)
-
 
     import pandas as pd
     import numpy as np 
     import matplotlib.pyplot as plt
 
 
-    df = pd.read_csv('logs_max_sat_{n}.csv'.format(n), names=['M','alfa','y_hat','y_acc'], sep=',').sort_values(['alfa'])[0:1000]
+    df = pd.read_csv('logs_max_sat__{0}.csv'.format(n), names=['M','alfa','y_hat','y_acc'], sep=',').sort_values(['alfa'])[0:1000]
 
 
 
@@ -54,8 +45,8 @@ def pegasus_phase_draw(energies_file, test_set_file, n):
 
 
     plt.title('2-SAT, each point is averaged by step: (1/20)', fontsize=14)
-    plt.plot(y, ss_hat['sum']/ss_hat['count'], "-",label='Pegasus-500')
-    plt.plot(y, ss_acc['sum']/ss_acc['count'], "-",label='MiniSAT-500')
+    plt.plot(y, ss_hat['sum']/ss_hat['count'], "-",label='Pegasus-{0}'.format(n))
+    plt.plot(y, ss_acc['sum']/ss_acc['count'], "-",label='MiniSAT-{0}'.format(n))
 
 
 
@@ -65,5 +56,6 @@ def pegasus_phase_draw(energies_file, test_set_file, n):
     plt.legend(fontsize=12)
     plt.show()
     plt.savefig('phase{0}'.format(n))
+    plt.close()
 
     
